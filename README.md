@@ -1,6 +1,37 @@
-# shadowsocks-over-websocket
-基于 [shadowsocks](https://zh.wikipedia.org/zh-cn/Shadowsocks) 协议的翻墙工具 , 可部署在 [Heroku](https://www.heroku.com/) 平台上 , 实现免费科学上网
+# Heroku 科学上网
+shadowsocks-over-websocket：基于 [shadowsocks](https://zh.wikipedia.org/zh-cn/Shadowsocks) 协议的科学上网工具 , 可部署在 [Heroku](https://www.heroku.com/) 平台上 , 实现免费科学上网
 
+## 我的操作步骤
+1）进入项目目录
+
+cd /Users/aaron/PJ/mac/heroku-vpn
+
+2）配置 shadowsocks 服务端
+
+```
+heroku create  #创建项目
+git push heroku master #推送代码到 heroku
+heroku config:set METHOD=aes-256-cfb PASSWORD=设置密码 SERVER_ADDRESS=0.0.0.0  #配置shadowsocks参数（相当于登录 heroku 网址-进入项目-Setting-设置 Config Vars）
+```
+
+3）配置 shadowsocks 客户端
+
+新增或切换到 heroku 节点：地址 127.0.0.1，端口 1080，加密方法如上，密码如上
+
+4）杀掉 shadowsocks 本地 socks5 进程
+
+每次提示端口占用，都要杀掉一次，执行时浏览器可能会闪退
+
+```
+kill -9 $(lsof -i tcp:1086 -t)
+```
+
+5）监听 shadowsocks 本地 Socks5 端口
+
+```
+brew install node  #安装 node.js
+node local.js -s vpnxxx.herokuapp.com -l 1086 -m aes-256-cfb -k password -p 80  #连接heroku的shadowsocks服务（需修改：heroku项目网址，socks5端口默认1086，加密方式、密码按上边设置的）
+```
 
 ## 如何部署在 Heroku 平台上
 
